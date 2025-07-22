@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horse Trail Adventure</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #game-container {
+      max-width: 600px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 1.2em;
+      background-color: #8bd3dd;
+      border: none;
+      border-radius: 8px;
+      color: #111;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #40c0c0;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 1.2em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <img id="scene-img" src="start_screen.jpg" alt="Start scene" />
+    <div class="buttons" id="buttons">
+      <button onclick="startGame()">Start</button>
+    </div>
+    <div id="message"></div>
+  </div>
+
+  <audio id="horseSound" src="horse.mp3" preload="auto"></audio>
+
+  <script>
+    const images = {
+      start: "start_screen.jpg",
+      fork1: "trail_fork1.jpg",
+      fork2: "trail_fork2.jpg",
+      fence: "blocked_fence.jpg",
+      mud: "stuck_in_mud.jpg",
+      chicken: "scared_chicken.jpg",
+      gallop: "horse_gallops.jpg",
+      stable: "reached_stable.jpg",
+      win: "you_win.jpg"
+    };
+
+    const horseSound = document.getElementById('horseSound');
+    const sceneImg = document.getElementById('scene-img');
+    const buttons = document.getElementById('buttons');
+    const message = document.getElementById('message');
+
+    let step = 0;
+
+    function playSound() {
+      horseSound.currentTime = 0;
+      horseSound.play();
+    }
+
+    function startGame() {
+      step = 1;
+      playSound();
+      sceneImg.src = images.fork1;
+      message.textContent = "Which path will you take?";
+      buttons.innerHTML = `
+        <button onclick="choosePath('left')">Left</button>
+        <button onclick="choosePath('straight')">Straight</button>
+        <button onclick="choosePath('right')">Right</button>
+      `;
+    }
+
+    function choosePath(direction) {
+      playSound();
+      if (step === 1) {
+        if (direction === 'straight') {
+          sceneImg.src = images.gallop;
+          message.textContent = "Good choice! Let's keep going!";
+          setTimeout(() => {
+            step = 2;
+            sceneImg.src = images.fork2;
+            message.textContent = "Another fork ahead!";
+          }, 1500);
+        } else {
+          sceneImg.src = direction === 'left' ? images.fence : images.chicken;
+          message.textContent = "Oops! Try again from the start!";
+          buttons.innerHTML = `<button onclick="startGame()">Try Again</button>`;
+        }
+      } else if (step === 2) {
+        if (direction === 'left') {
+          sceneImg.src = images.gallop;
+          message.textContent = "You're almost there!";
+          setTimeout(() => {
+            sceneImg.src = images.reached_stable;
+            message.textContent = "You've reached the stable!";
+            setTimeout(() => {
+              sceneImg.src = images.win;
+              message.textContent = "🏆 You Win! Well done, rider!";
+              buttons.innerHTML = `<button onclick="startGame()">Play Again</button>`;
+            }, 2000);
+          }, 1500);
+        } else {
+          sceneImg.src = direction === 'straight' ? images.mud : images.chicken;
+          message.textContent = "Oh no! Wrong way!";
+          buttons.innerHTML = `<button onclick="startGame()">Try Again</button>`;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
