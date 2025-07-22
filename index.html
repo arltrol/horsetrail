@@ -5,34 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Horse Trail Adventure</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background-color: #111;
       color: #fff;
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      height: 100%;
+      overflow: hidden;
     }
 
     #game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100vh;
       max-width: 600px;
-      width: 100%;
+      margin: 0 auto;
       padding: 10px;
+      box-sizing: border-box;
     }
 
-    img {
+    #scene-img {
       width: 100%;
       height: auto;
+      max-height: 60vh;
       border-radius: 10px;
-      display: block;
     }
 
     .buttons {
-      margin-top: 10px;
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -52,19 +57,20 @@
     }
 
     #message {
-      margin-top: 10px;
-      font-size: 1.2em;
+      font-size: 1.1em;
       text-align: center;
+      padding: 5px 10px;
+      min-height: 1.5em;
     }
   </style>
 </head>
 <body>
   <div id="game-container">
     <img id="scene-img" src="start_screen.jpg" alt="Start scene" />
+    <div id="message">🐴 Welcome to Horse Trail Adventure!</div>
     <div class="buttons" id="buttons">
       <button onclick="startGame()">Start</button>
     </div>
-    <div id="message"></div>
   </div>
 
   <audio id="horseSound" src="horse.mp3" preload="auto"></audio>
@@ -127,7 +133,7 @@
           sceneImg.src = images.gallop;
           message.textContent = "You're almost there!";
           setTimeout(() => {
-            sceneImg.src = images.reached_stable;
+            sceneImg.src = images.stable;
             message.textContent = "You've reached the stable!";
             setTimeout(() => {
               sceneImg.src = images.win;
